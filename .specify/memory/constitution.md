@@ -49,7 +49,7 @@ This installation's `AGENTS.md` warns: this is NOT the Next.js you know — APIs
 - **Fonts**: Tajawal (Arabic) + Inter (Latin) — to be confirmed
 - **Analytics**: PostHog
 - **Errors**: Sentry
-- **Deploy**: Cloudflare Pages
+- **Deploy**: Vercel (Hobby free → Pro at scale). See ADR-017.
 
 Substitutions allowed only via documented ADR.
 

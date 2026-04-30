@@ -20,7 +20,7 @@ Next.js frontend for Hadouta — Egyptian AI personalized children's book platfo
 - **Fonts**: Tajawal (Arabic) + Inter (Latin)
 - **Analytics**: PostHog
 - **Errors**: Sentry
-- **Deploy**: Cloudflare Pages
+- **Deploy**: Vercel (free Hobby tier MVP → Pro at scale)
 
 Full architectural decisions: see `../docs/decisions/ADR-*.md`.
 
