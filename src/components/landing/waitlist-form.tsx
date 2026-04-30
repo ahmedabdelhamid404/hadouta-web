@@ -1,11 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { apiClient } from "@/lib/api/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001";
 
 type Status = "idle" | "submitting" | "success" | "error";
 
@@ -17,32 +16,30 @@ export function WaitlistForm() {
     setStatus("submitting");
     setMessage("");
 
-    try {
-      const res = await fetch(`${API_URL}/waitlist`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: String(formData.get("email") ?? ""),
-          phone: String(formData.get("phone") ?? "") || undefined,
-          name: String(formData.get("name") ?? "") || undefined,
-          source:
-            new URLSearchParams(globalThis.location?.search).get("utm_source") ??
-            "landing",
-        }),
-      });
+    const email = String(formData.get("email") ?? "");
+    const phone = String(formData.get("phone") ?? "") || undefined;
+    const name = String(formData.get("name") ?? "") || undefined;
+    const source =
+      new URLSearchParams(globalThis.location?.search).get("utm_source") ??
+      "landing";
 
-      const data = (await res.json()) as { ok?: boolean; message?: string; error?: string };
+    const { data, error, response } = await apiClient.POST("/waitlist", {
+      body: { email, phone, name, source },
+    });
 
-      if (res.ok && data.ok) {
-        setStatus("success");
-        setMessage(data.message ?? "تم تسجيلك! هنبعتلك إشعار قريب.");
-      } else {
-        setStatus("error");
-        setMessage(data.error ?? "حصل خطأ. حاولي مرة أخرى.");
-      }
-    } catch {
-      setStatus("error");
-      setMessage("الاتصال فشل. تحققي من الإنترنت وحاولي مرة أخرى.");
+    if (response.ok && data?.ok) {
+      setStatus("success");
+      setMessage(data.message ?? "تم تسجيلك! هنبعتلك إشعار قريب.");
+      return;
+    }
+
+    setStatus("error");
+    if (error && typeof error === "object" && "error" in error) {
+      const errObj = (error as { error?: { issues?: Array<{ message?: string }> } }).error;
+      const firstIssue = errObj?.issues?.[0]?.message;
+      setMessage(firstIssue ?? "حصل خطأ. حاولي مرة أخرى.");
+    } else {
+      setMessage("حصل خطأ. حاولي مرة أخرى.");
     }
   }
 
