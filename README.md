@@ -1,36 +1,117 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Hadouta Web (حدوتة)
 
-## Getting Started
+Next.js frontend for Hadouta — Egyptian AI personalized children's book platform.
 
-First, run the development server:
+> **Heads-up to anyone reading this**: this repo is one of two. The backend lives at `../hadouta-backend`. The shared design doc, sprint plans, ADRs, and session notes live at `../docs/`. **Read `../docs/sprints/sprint-tracker.md` first to understand current state.**
+
+> **Important — about this Next.js version**: see `AGENTS.md` at the root. This installation has breaking changes from older Next.js. Read `node_modules/next/dist/docs/` for current API patterns before writing code that touches App Router conventions.
+
+---
+
+## Stack
+
+- **Framework**: Next.js 16 + React 19 (App Router)
+- **Styling**: Tailwind CSS 4
+- **Components**: shadcn/ui (RTL-enabled) + Radix UI primitives
+- **i18n**: next-intl (Arabic primary, English secondary)
+- **Forms**: react-hook-form + Zod
+- **Auth**: Better-Auth client SDK (matches backend)
+- **API client**: openapi-fetch + openapi-typescript (types generated from backend OpenAPI)
+- **Fonts**: Tajawal (Arabic) + Inter (Latin)
+- **Analytics**: PostHog
+- **Errors**: Sentry
+- **Deploy**: Cloudflare Pages
+
+Full architectural decisions: see `../docs/decisions/ADR-*.md`.
+
+---
+
+## Quick start
+
+### Prereqs
+
+- Node.js 20.18+ (`nvm use` if you have nvm)
+- pnpm 10+
+- The backend running locally at `http://localhost:3001` (see `../hadouta-backend/README.md`)
+
+### Setup
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+# 1. Install
+pnpm install
+
+# 2. Configure environment
+cp .env.example .env.local
+# Set NEXT_PUBLIC_API_URL=http://localhost:3001 (default if backend is local)
+
+# 3. Run dev server
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The app runs on `http://localhost:3000`. Default page is the Arabic landing + waitlist signup form.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Sync types from backend
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+When backend API changes:
 
-## Learn More
+```bash
+# Make sure backend dev server is running
+pnpm sync-types
+```
 
-To learn more about Next.js, take a look at the following resources:
+This regenerates `src/lib/api/api-types.ts` from the backend's OpenAPI export.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Project structure
 
-## Deploy on Vercel
+```
+src/
+├── app/                       Next.js App Router
+│   ├── layout.tsx             RTL Arabic layout, Tajawal + Inter fonts
+│   ├── page.tsx               landing page (Arabic, waitlist signup)
+│   ├── globals.css            shadcn theme tokens + Tailwind 4 directives
+│   ├── (customer)/            customer ordering flow (Sprint 4)
+│   ├── admin/                 admin panel routes (guarded, Sprint 5)
+│   └── api/                   Next.js route handlers (mostly auth callbacks)
+├── components/
+│   ├── ui/                    shadcn/ui copy-paste components
+│   └── landing/               landing-page-specific components
+├── lib/
+│   ├── api/                   API client (openapi-fetch) + generated types
+│   ├── auth/                  Better-Auth client setup
+│   └── utils.ts               cn() utility
+messages/                      next-intl translations
+├── ar.json
+└── en.json
+public/                        static assets
+.specify/                      spec-kit workflows + memory + templates
+.claude/                       project-scope Claude Code config
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Useful scripts
+
+```bash
+pnpm dev              # start dev server
+pnpm build            # production build
+pnpm start            # serve production build
+pnpm typecheck        # type-check without emit
+pnpm lint             # run ESLint
+pnpm sync-types       # regenerate API types from backend OpenAPI
+```
+
+---
+
+## Multi-session continuity
+
+Every session reads `../docs/sprints/sprint-tracker.md` first. Every session writes a session note in `../docs/session-notes/` at the end. Decisions get documented as ADRs in `../docs/decisions/`. The sprint plans live in `../docs/sprints/`.
+
+If you're starting a new session: **read the tracker, read the latest session note, open the current sprint plan, continue.**
+
+---
+
+## License
+
+Private. Not for redistribution.

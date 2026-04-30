@@ -1,0 +1,26 @@
+{
+  "Hero": {
+    "tagline": "Your child's bedtime story… where they're the hero",
+    "subtitle": "A personalized children's book made with AI just for your child. Upload their photos, pick a theme, and in minutes you'll have a beautiful book starring them."
+  },
+  "Waitlist": {
+    "title": "Join the waitlist",
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone (optional)",
+    "submit": "Save my spot",
+    "submitting": "Saving…",
+    "successTitle": "You're on the list!",
+    "successDesc": "We'll notify you when we launch.",
+    "noSpam": "We don't send marketing emails. Just one launch notification."
+  },
+  "HowItWorks": {
+    "title": "How Hadouta works",
+    "step1Title": "Customize the hero",
+    "step1Desc": "Enter your child's name, age, upload their photos. Add mom, dad, or siblings as supporting characters.",
+    "step2Title": "Pick the theme",
+    "step2Desc": "We're starting with \"First Day of School.\" Eid, birthdays, and more themes coming soon.",
+    "step3Title": "Receive the book",
+    "step3Desc": "Within minutes, we'll send you the digital book via WhatsApp and email."
+  }
+}
