@@ -1,22 +1,23 @@
 /**
  * Trust band — Phase 3 design section rhythm Option C, slot #6.
- * THREE-PART HONEST CLAIM (per brand brief AI-honesty quiet middle path):
- *   1. Egyptian writers + illustrators design our story templates
- *   2. Egyptian team reviews every book
+ * THREE-PART HONEST CLAIM (post-ADR-020, AI-only generation with human review):
+ *   1. Designed specifically for Egyptian children (output-describing, true)
+ *   2. Egyptian team reviews every book (true; operationally costly)
  *   3. 2-3 day production window — NOT minutes
  *
- * Team photos: Track B — Ahmed sources photos and we swap into the cards.
- * Until then: gradient avatar placeholders + names.
+ * Pre-ADR-020 the first claim was "Egyptian writers + illustrators design our
+ * templates" — dropped because Ahmed pivoted to AI-only generation with human
+ * review only. See ADR-020 + brand brief amendment.
  */
 
 const claims = [
   {
-    ar: "كتّاب ورسامين مصريين",
-    sub: "بيصمموا قوالب حكاياتنا — ثقافة مصرية أصيلة في كل صفحة",
+    ar: "مصممة للأطفال المصريين",
+    sub: "حدوتة بمصرية أصيلة في كل صفحة — الموضوعات، اللغة، والتفاصيل الثقافية",
   },
   {
     ar: "مراجعة بإيد مصرية",
-    sub: "فريقنا بيراجع كل حدوتة بدقة قبل ما توصلك",
+    sub: "فريقنا بيراجع كل حدوتة بدقة قبل ما توصلك — ده الضمان الحقيقي",
   },
   {
     ar: "جاهزة في ٢-٣ أيام",
