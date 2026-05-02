@@ -24,8 +24,10 @@ export function PostHogProvider({ children }: { children: React.ReactNode }) {
     if (!key || typeof window === "undefined") return;
 
     posthog.init(key, {
+      // Hadouta's PostHog account is on the EU instance — default reflects that.
+      // Override via NEXT_PUBLIC_POSTHOG_HOST if/when we move regions.
       api_host:
-        process.env.NEXT_PUBLIC_POSTHOG_HOST ?? "https://us.i.posthog.com",
+        process.env.NEXT_PUBLIC_POSTHOG_HOST ?? "https://eu.i.posthog.com",
       person_profiles: "identified_only",
       capture_pageview: false,
       capture_pageleave: true,
