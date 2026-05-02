@@ -2,12 +2,21 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useWizardStore } from "@/lib/wizard/store";
+import { patchOrder } from "@/lib/wizard/api";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 const API_URL =
   process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001";
+
+// Dev-mode OTP bypass — accepts any phone, hardcoded code "123456".
+// Flip to false (or unset env var) when Twilio credentials are wired in
+// Railway production env to switch to real WhatsApp/SMS OTP delivery.
+// Default true while Twilio creds are pending — set NEXT_PUBLIC_DEV_OTP_BYPASS=
+// "false" in Vercel env to disable.
+const DEV_OTP_BYPASS = process.env.NEXT_PUBLIC_DEV_OTP_BYPASS !== "false";
+const DEV_OTP_CODE = "123456";
 
 type Phase = "enter-phone" | "enter-otp" | "verified" | "paying";
 
@@ -24,6 +33,20 @@ export function Step6() {
 
   const sendOtp = async () => {
     setError(null);
+
+    if (DEV_OTP_BYPASS) {
+      // Skip backend OTP send — go straight to OTP entry
+      setPhase("enter-otp");
+      let countdown = 60;
+      setResendIn(countdown);
+      const t = setInterval(() => {
+        countdown--;
+        setResendIn(countdown);
+        if (countdown <= 0) clearInterval(t);
+      }, 1000);
+      return;
+    }
+
     try {
       const res = await fetch(`${API_URL}/api/auth/phone-number/send-otp`, {
         method: "POST",
@@ -49,6 +72,26 @@ export function Step6() {
 
   const verifyOtp = async () => {
     setError(null);
+
+    if (DEV_OTP_BYPASS) {
+      // Local-only verification against hardcoded dev code
+      if (otp !== DEV_OTP_CODE) {
+        setError(`الرمز غلط. (وضع التطوير: استخدم ${DEV_OTP_CODE})`);
+        return;
+      }
+      // Persist phone on the order so Paymob billing_data + WhatsApp
+      // confirmation message use it.
+      if (store.orderId) {
+        try {
+          await patchOrder(store.orderId, { buyerPhone: fullPhone() });
+        } catch {
+          // non-fatal — payment still proceeds with default phone
+        }
+      }
+      setPhase("verified");
+      return;
+    }
+
     try {
       const res = await fetch(`${API_URL}/api/auth/phone-number/verify`, {
         method: "POST",
@@ -58,6 +101,14 @@ export function Step6() {
       if (!res.ok) {
         setError("الرمز غلط أو انتهت صلاحيته.");
         return;
+      }
+      // Real flow — also persist phone for downstream
+      if (store.orderId) {
+        try {
+          await patchOrder(store.orderId, { buyerPhone: fullPhone() });
+        } catch {
+          /* non-fatal */
+        }
       }
       setPhase("verified");
     } catch {
@@ -107,6 +158,11 @@ export function Step6() {
         <p className="text-xs text-foreground/55">
           مصري — هنبعت رمز التأكيد على واتساب أول
         </p>
+        {DEV_OTP_BYPASS && (
+          <div className="bg-hadouta-ochre/15 border border-hadouta-ochre/40 rounded text-xs px-2 py-1.5 text-foreground/80">
+            🛠 وضع التطوير — استخدم الرمز <strong className="font-mono">{DEV_OTP_CODE}</strong>
+          </div>
+        )}
         <div className="flex gap-2">
           <span className="bg-card border border-border rounded-md px-3 py-2 text-sm whitespace-nowrap">
             🇪🇬 +20
