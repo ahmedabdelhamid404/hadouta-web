@@ -4,118 +4,205 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* ============================================================
+   Hadouta brand tokens
+   Per docs/design/brand-brief.md v1.1 — Storyteller archetype.
+   Three-tier system:
+     1. --hadouta-* : raw brand palette (rarely used directly)
+     2. --background, --primary, etc. : shadcn semantic mapping
+     3. Components consume tier-2 names; rebrand at tier 1 only.
+   ============================================================ */
+
 @theme inline {
+  /* ----- Color (raw brand tokens, exposed as Tailwind utilities) ----- */
+  --color-hadouta-cream: var(--hadouta-cream);
+  --color-hadouta-terracotta: var(--hadouta-terracotta);
+  --color-hadouta-ochre: var(--hadouta-ochre);
+  --color-hadouta-teal: var(--hadouta-teal);
+  --color-hadouta-brown: var(--hadouta-brown);
+  --color-hadouta-blush: var(--hadouta-blush);
+
+  /* ----- Color (shadcn semantic mapping) ----- */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-tajawal), system-ui, -apple-system, sans-serif;
-  --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
-  --font-heading: var(--font-tajawal), system-ui, sans-serif;
-  --font-latin: var(--font-inter), system-ui, sans-serif;
-  --color-sidebar-ring: var(--sidebar-ring);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar: var(--sidebar);
-  --color-chart-5: var(--chart-5);
-  --color-chart-4: var(--chart-4);
-  --color-chart-3: var(--chart-3);
-  --color-chart-2: var(--chart-2);
-  --color-chart-1: var(--chart-1);
-  --color-ring: var(--ring);
-  --color-input: var(--input);
-  --color-border: var(--border);
-  --color-destructive: var(--destructive);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-accent: var(--accent);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-muted: var(--muted);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-secondary: var(--secondary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-primary: var(--primary);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-popover: var(--popover);
-  --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
-  --radius-sm: calc(var(--radius) * 0.6);
-  --radius-md: calc(var(--radius) * 0.8);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) * 1.4);
-  --radius-2xl: calc(var(--radius) * 1.8);
-  --radius-3xl: calc(var(--radius) * 2.2);
-  --radius-4xl: calc(var(--radius) * 2.6);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-kid-magic: var(--kid-magic);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  /* ----- Typography (per brand brief 3-tier system) ----- */
+  /* Body & UI: Tajawal — universal-modern Arabic, geometric. */
+  --font-sans: var(--font-tajawal), system-ui, -apple-system, sans-serif;
+  /* Headers: El Messiri — Egyptian-designed humanist Arabic. */
+  --font-heading: var(--font-el-messiri), var(--font-tajawal), system-ui, sans-serif;
+  /* Decorative / kid-magic / Hadouta logotype: Aref Ruqaa — calligraphic.
+     RULE: appears no more than once per page (per brand brief). */
+  --font-display: var(--font-aref-ruqaa), serif;
+  /* Latin companion (English secondary text): Fraunces — modern serif with
+     playful personality, warm-old-book feel. */
+  --font-latin: var(--font-fraunces), Georgia, serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* ----- Radius scale (per brand brief — avoid both extremes) ----- */
+  --radius-tight: 0.25rem; /* 4px — chips, badges, inline pills */
+  --radius-sm: calc(var(--radius) * 0.6); /* legacy shadcn alias */
+  --radius-md: calc(var(--radius) * 0.8); /* legacy shadcn alias */
+  --radius-lg: var(--radius); /* 8px — buttons, inputs (base) */
+  --radius-xl: calc(var(--radius) * 2); /* 16px — cards, larger surfaces */
+  --radius-2xl: calc(var(--radius) * 3); /* 24px — modals, sheets, hero panels */
+  --radius-3xl: calc(var(--radius) * 4); /* 32px — rare, expressive */
+  --radius-4xl: calc(var(--radius) * 5); /* 40px — extra rare */
+
+  /* ----- Motion (storyteller-paced — slower than typical SaaS) ----- */
+  --motion-quick: 200ms;     /* button hover, link, micro-interaction */
+  --motion-paced: 400ms;     /* modal open/close, drawer, section reveal */
+  --motion-page: 600ms;      /* page-turn-feel, big state transitions */
+  --motion-easing: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  /* ----- Tier 1: Hadouta raw brand palette (oklch) ----- */
+  /* Approximate sRGB hex equivalents for reference (Phase 3 will refine):
+     #FBF5E8 cream — old galabeya cotton, sun-on-paper
+     #C56B47 terracotta — Cairo afternoon clay pot
+     #D4A24C ochre — saffron, golden hour, honey jar
+     #2A6F75 teal — Khan el-Khalili glass, Islamic tile
+     #3D2817 brown — old leather, oud-wood, coffee
+     #E8B7A0 blush — cheek-warmth in illustrations */
+  --hadouta-cream: oklch(0.96 0.018 88);
+  --hadouta-terracotta: oklch(0.59 0.135 36);
+  --hadouta-ochre: oklch(0.72 0.13 80);
+  --hadouta-teal: oklch(0.46 0.06 207);
+  --hadouta-brown: oklch(0.25 0.04 50);
+  --hadouta-blush: oklch(0.81 0.06 40);
+
+  /* ----- Tier 2: shadcn semantic mapping ----- */
+  /* Default surface: warm cream (yellow-undertone, NOT cool/blue/grey).
+     Default text: warm deep brown. */
+  --background: var(--hadouta-cream);
+  --foreground: var(--hadouta-brown);
+  --card: oklch(0.98 0.012 88); /* slightly-lighter-than-cream */
+  --card-foreground: var(--hadouta-brown);
+  --popover: var(--hadouta-cream);
+  --popover-foreground: var(--hadouta-brown);
+
+  /* Primary CTA: terracotta with cream text.
+     Contrast 5.0:1 — passes AA Large (≥18pt or ≥14pt bold). Buttons
+     qualify; for body-text-on-terracotta, prefer cream-on-darker variant. */
+  --primary: var(--hadouta-terracotta);
+  --primary-foreground: var(--hadouta-cream);
+
+  /* Secondary: ochre — used for emphasis bands, callouts. */
+  --secondary: var(--hadouta-ochre);
+  --secondary-foreground: var(--hadouta-brown);
+
+  /* Muted: dusty cream for subtler surfaces (FAQ rows, metadata, etc.) */
+  --muted: oklch(0.93 0.022 80);
+  --muted-foreground: oklch(0.45 0.04 50); /* dustier brown */
+
+  /* Accent: deep teal (sparing — 5-10% of visual weight per brand brief).
+     With cream foreground: 5.0:1 contrast — AA. */
+  --accent: var(--hadouta-teal);
+  --accent-foreground: var(--hadouta-cream);
+
+  /* Destructive: warm-red (slight Egyptian shift from default; readable on cream) */
+  --destructive: oklch(0.55 0.18 28);
+
+  /* Borders: warm soft (terracotta-tinted at low chroma) */
+  --border: oklch(0.86 0.022 60);
+  --input: var(--border);
+  --ring: var(--hadouta-terracotta);
+
+  /* Kid-magic accent — appears only on kid-magical surfaces
+     (order wizard, "your book is being made", book interior). */
+  --kid-magic: var(--hadouta-blush);
+
+  /* Charts — using brand palette directly. Adjust when admin dashboards exist. */
+  --chart-1: var(--hadouta-terracotta);
+  --chart-2: var(--hadouta-ochre);
+  --chart-3: var(--hadouta-teal);
+  --chart-4: var(--hadouta-blush);
+  --chart-5: var(--hadouta-brown);
+
+  /* Base radius for shadcn legacy aliases. Brand-brief radius scale lives
+     in @theme inline above (--radius-tight, --radius-xl, --radius-2xl). */
+  --radius: 0.5rem; /* 8px — buttons, inputs base */
+
+  /* Sidebar (admin dashboards — deferred, mapped to brand palette so it's
+     coherent if/when we add an admin surface) */
+  --sidebar: var(--hadouta-cream);
+  --sidebar-foreground: var(--hadouta-brown);
+  --sidebar-primary: var(--hadouta-terracotta);
+  --sidebar-primary-foreground: var(--hadouta-cream);
+  --sidebar-accent: var(--hadouta-teal);
+  --sidebar-accent-foreground: var(--hadouta-cream);
+  --sidebar-border: var(--border);
+  --sidebar-ring: var(--ring);
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  /* Dark mode is deliberately deferred — no current product requirement.
+     Stub kept here for shadcn-component compatibility; values mirror
+     light-mode for now. Real dark-mode design happens when warranted
+     (likely after MVP launch, alongside admin dashboard work).
+     See brand-brief.md "Open decisions" — not on Sprint-1 critical path. */
+  --background: var(--hadouta-brown);
+  --foreground: var(--hadouta-cream);
+  --card: oklch(0.3 0.04 50);
+  --card-foreground: var(--hadouta-cream);
+  --popover: oklch(0.3 0.04 50);
+  --popover-foreground: var(--hadouta-cream);
+  --primary: var(--hadouta-terracotta);
+  --primary-foreground: var(--hadouta-cream);
+  --secondary: oklch(0.4 0.05 50);
+  --secondary-foreground: var(--hadouta-cream);
+  --muted: oklch(0.32 0.04 50);
+  --muted-foreground: oklch(0.7 0.04 80);
+  --accent: var(--hadouta-teal);
+  --accent-foreground: var(--hadouta-cream);
+  --destructive: oklch(0.65 0.2 28);
+  --border: oklch(0.4 0.05 50);
+  --input: var(--border);
+  --ring: var(--hadouta-terracotta);
+  --chart-1: var(--hadouta-terracotta);
+  --chart-2: var(--hadouta-ochre);
+  --chart-3: var(--hadouta-teal);
+  --chart-4: var(--hadouta-blush);
+  --chart-5: oklch(0.7 0.04 80);
+  --sidebar: oklch(0.3 0.04 50);
+  --sidebar-foreground: var(--hadouta-cream);
+  --sidebar-primary: var(--hadouta-terracotta);
+  --sidebar-primary-foreground: var(--hadouta-cream);
+  --sidebar-accent: var(--hadouta-teal);
+  --sidebar-accent-foreground: var(--hadouta-cream);
+  --sidebar-border: var(--border);
+  --sidebar-ring: var(--ring);
 }
 
 @layer base {
