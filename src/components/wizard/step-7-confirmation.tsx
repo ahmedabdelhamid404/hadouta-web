@@ -80,17 +80,23 @@ export function Step7() {
       </div>
 
       <div className="space-y-2 pt-4">
-        <button
-          type="button"
+        {orderId ? (
+          <Link
+            href={`/account/orders/${orderId}`}
+            className={buttonVariants({ size: "lg", className: "w-full" })}
+          >
+            تتبع حالة الطلب وحمّل الحدوتة
+          </Link>
+        ) : null}
+        <Link
+          href="/account"
           className={buttonVariants({
             variant: "outline",
             className: "w-full",
           })}
-          disabled
-          title="Order tracking page lands Sprint 4+"
         >
-          تتبع حالة الطلب
-        </button>
+          كل حدوتاتي
+        </Link>
         <Link
           href="/"
           className="block text-center text-sm text-hadouta-teal underline underline-offset-2 py-2 hover:text-hadouta-teal/80"
