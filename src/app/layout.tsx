@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Tajawal, Inter } from "next/font/google";
 import "./globals.css";
+import { PostHogProvider } from "@/components/providers/PostHogProvider";
+import { PostHogPageview } from "@/components/providers/PostHogPageview";
 
 const tajawal = Tajawal({
   variable: "--font-tajawal",
@@ -39,7 +41,10 @@ export default function RootLayout({
       className={`${tajawal.variable} ${inter.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-sans bg-background text-foreground">
-        {children}
+        <PostHogProvider>
+          <PostHogPageview />
+          {children}
+        </PostHogProvider>
       </body>
     </html>
   );
