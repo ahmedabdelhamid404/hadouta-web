@@ -98,14 +98,16 @@ export async function uploadPhoto(
 }
 
 export async function createPaymentIntent(orderId: string): Promise<{
-  iframeUrl: string;
-  paymobOrderId: number;
+  checkoutUrl: string;
 }> {
   const res = await fetch(`${API_URL}/api/payments/intent`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ orderId }),
   });
-  if (!res.ok) throw new Error("Failed to create payment intent");
-  return (await res.json()) as { iframeUrl: string; paymobOrderId: number };
+  if (!res.ok) {
+    const err = await res.text();
+    throw new Error(`Failed to create payment intent: ${err}`);
+  }
+  return (await res.json()) as { checkoutUrl: string };
 }

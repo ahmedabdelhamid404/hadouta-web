@@ -75,15 +75,17 @@ export function Step6() {
         body: JSON.stringify({ orderId: store.orderId }),
       });
       if (!res.ok) {
+        const errText = await res.text();
         setError(
-          "Paymob integration not configured yet. Provide credentials and re-deploy. " +
-            "(Phase 5 Task 1.10 deferred — see implementation plan.)",
+          res.status === 503
+            ? "بوابة الدفع لسه مش مفعّلة. هنبعتلك إشعار لما تكون جاهزة."
+            : `فشل بدء الدفع: ${errText}`,
         );
         setPhase("verified");
         return;
       }
-      const data = (await res.json()) as { iframeUrl: string };
-      window.location.href = data.iframeUrl;
+      const data = (await res.json()) as { checkoutUrl: string };
+      window.location.href = data.checkoutUrl;
     } catch {
       setError("فشل الاتصال ببوابة الدفع.");
       setPhase("verified");
