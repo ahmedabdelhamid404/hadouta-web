@@ -6,7 +6,7 @@ import { persist } from "zustand/middleware";
 
 export type AgeBand = "3-5" | "5-7" | "6-8";
 export type Gender = "boy" | "girl";
-export type AppearanceInputType = "photo" | "description";
+export type AppearanceInputType = "photo" | "description" | "persona";
 export type ClothingStyle =
   | "modern"
   | "egyptian_traditional"
@@ -36,6 +36,8 @@ export interface Appearance {
   appearanceInputType?: AppearanceInputType;
   photoIds?: string[]; // up to 3
   photoUrls?: string[]; // parallel to photoIds — Cloudinary URLs for preview
+  /** Persona library id (e.g. "curly-girl-young") — used when appearanceInputType === "persona". */
+  mainChildPersonaId?: string;
   descriptionSkinTone?: string;
   descriptionHair?: string;
   descriptionClothingStyle?: ClothingStyle;

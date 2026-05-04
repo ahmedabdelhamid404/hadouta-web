@@ -5,10 +5,11 @@ import { useWizardStore } from "@/lib/wizard/store";
 import { patchOrder } from "@/lib/wizard/api";
 import { PhotoUpload } from "./photo-upload";
 import { DescriptionForm } from "./description-form";
+import { PersonaPicker } from "./persona-picker";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-type Path = "photo" | "description";
+type Path = "photo" | "description" | "persona";
 
 export function Step2() {
   const router = useRouter();
@@ -23,6 +24,7 @@ export function Step2() {
     // Persist appearance fields to backend
     await patchOrder(store.orderId, {
       appearanceInputType: path,
+      mainChildPersonaId: store.appearance.mainChildPersonaId,
       descriptionSkinTone: store.appearance.descriptionSkinTone,
       descriptionHair: store.appearance.descriptionHair,
       descriptionClothingStyle: store.appearance.descriptionClothingStyle,
@@ -41,11 +43,11 @@ export function Step2() {
           </h2>
           <p className="text-foreground/70 text-sm mt-1">
             إزاي عاوز {store.childInfo.childName ?? "طفلك"} يظهر في الرسومات؟
-            في طريقتين، اختار اللي يريحك:
+            في تلات طرق، اختار اللي يريحك:
           </p>
         </header>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <button
             onClick={() => {
               setPath("photo");
@@ -65,17 +67,29 @@ export function Step2() {
 
           <button
             onClick={() => {
+              setPath("persona");
+              store.updateAppearance({ appearanceInputType: "persona" });
+            }}
+            className="bg-card rounded-xl p-4 text-center border-2 border-border hover:bg-secondary/30 transition-colors"
+          >
+            <div className="text-3xl mb-2">👧🏽</div>
+            <h3 className="font-heading font-semibold">اختار شكل قريب</h3>
+            <p className="text-xs text-foreground/65 mt-1 leading-relaxed">
+              اختار من ٦ أشكال جاهزة قريبة من طفلك. أسرع، ومناسب للخصوصية.
+            </p>
+          </button>
+
+          <button
+            onClick={() => {
               setPath("description");
               store.updateAppearance({ appearanceInputType: "description" });
             }}
             className="bg-card rounded-xl p-4 text-center border-2 border-border hover:bg-secondary/30 transition-colors"
           >
             <div className="text-3xl mb-2">✎</div>
-            <h3 className="font-heading font-semibold">
-              اوصف طفلك بدلاً من ذلك
-            </h3>
+            <h3 className="font-heading font-semibold">اوصف طفلك بنفسك</h3>
             <p className="text-xs text-foreground/65 mt-1 leading-relaxed">
-              اختار لون البشرة، اوصف الشعر واللباس. مناسب للخصوصية.
+              اختار لون البشرة، اوصف الشعر واللباس بكلامك.
             </p>
           </button>
         </div>
@@ -89,6 +103,13 @@ export function Step2() {
     );
   }
 
+  const pathLabel =
+    path === "photo"
+      ? { tag: "📷 طريقة الصور", title: "صورة طفلك" }
+      : path === "persona"
+        ? { tag: "👧🏽 طريقة الأشكال", title: "اختار شكل قريب" }
+        : { tag: "✎ طريقة الوصف", title: "اوصف طفلك" };
+
   return (
     <div dir="rtl" className="space-y-4">
       <header>
@@ -101,23 +122,28 @@ export function Step2() {
                 : "bg-hadouta-teal text-hadouta-cream",
             )}
           >
-            {path === "photo" ? "📷 طريقة الصور" : "✎ طريقة الوصف"}
+            {pathLabel.tag}
           </span>
-          <span>{path === "photo" ? "صورة طفلك" : "اوصف طفلك"}</span>
+          <span>{pathLabel.title}</span>
         </h2>
       </header>
 
       <div className="bg-hadouta-teal/8 border border-hadouta-teal/20 rounded-md p-2 text-xs">
-        اخترت طريقة {path === "photo" ? "الصور" : "الوصف"}.{" "}
         <button
-          onClick={() => setPath(path === "photo" ? "description" : "photo")}
+          onClick={() => setPath(null)}
           className="text-hadouta-teal underline underline-offset-2"
         >
-          ↻ تحويل لطريقة {path === "photo" ? "الوصف" : "الصور"}
+          ↻ تحويل لطريقة تانية
         </button>
       </div>
 
-      {path === "photo" ? <PhotoUpload /> : <DescriptionForm />}
+      {path === "photo" ? (
+        <PhotoUpload />
+      ) : path === "persona" ? (
+        <PersonaPicker />
+      ) : (
+        <DescriptionForm />
+      )}
 
       <div className="flex justify-between pt-4 border-t border-border/30">
         <Button variant="outline" onClick={() => router.push("/wizard/1")}>
