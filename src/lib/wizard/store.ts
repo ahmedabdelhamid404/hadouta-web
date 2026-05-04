@@ -35,6 +35,7 @@ export interface ChildInfo {
 export interface Appearance {
   appearanceInputType?: AppearanceInputType;
   photoIds?: string[]; // up to 3
+  photoUrls?: string[]; // parallel to photoIds — Cloudinary URLs for preview
   descriptionSkinTone?: string;
   descriptionHair?: string;
   descriptionClothingStyle?: ClothingStyle;

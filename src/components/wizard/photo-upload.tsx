@@ -10,6 +10,7 @@ export function PhotoUpload() {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const photoIds = store.appearance.photoIds ?? [];
+  const photoUrls = store.appearance.photoUrls ?? [];
 
   const handleFile = async (file: File) => {
     if (!store.orderId) {
@@ -23,8 +24,15 @@ export function PhotoUpload() {
     setError(null);
     setUploading(true);
     try {
-      const { photoId } = await uploadPhoto(store.orderId, file, "main_child");
-      store.updateAppearance({ photoIds: [...photoIds, photoId] });
+      const { photoId, url } = await uploadPhoto(
+        store.orderId,
+        file,
+        "main_child",
+      );
+      store.updateAppearance({
+        photoIds: [...photoIds, photoId],
+        photoUrls: [...photoUrls, url],
+      });
     } catch (e) {
       setError(
         e instanceof Error
@@ -40,18 +48,27 @@ export function PhotoUpload() {
     <div className="space-y-3">
       <div className="grid grid-cols-3 gap-2">
         {[0, 1, 2].map((i) => {
-          const id = photoIds[i];
+          const url = photoUrls[i];
           return (
             <div
               key={i}
               className={cn(
-                "aspect-square rounded-lg flex items-center justify-center text-2xl",
-                id
+                "aspect-square rounded-lg flex items-center justify-center text-2xl overflow-hidden",
+                url
                   ? "bg-gradient-to-br from-hadouta-blush/40 to-hadouta-ochre/40"
                   : "border-2 border-dashed border-border bg-background text-foreground/30",
               )}
             >
-              {id ? "🖼️" : "+"}
+              {url ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={url}
+                  alt={`صورة ${i + 1}`}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                "+"
+              )}
             </div>
           );
         })}
